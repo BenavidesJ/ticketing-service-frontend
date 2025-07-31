@@ -28,7 +28,7 @@ interface Ticket {
 
 interface TicketCardProps {
   ticket: Ticket
-  statusId: string
+  statusId?: string
   isDragging?: boolean
 }
 
@@ -82,7 +82,7 @@ export function TicketCard({ ticket, statusId, isDragging = false }: TicketCardP
       style={style}
       {...attributes}
       {...listeners}
-      className={`cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow ${
+      className={`cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow mb-2 ${
         isDragging || isSortableDragging ? "shadow-lg" : ""
       }`}
     >

@@ -79,6 +79,7 @@ class ApiService {
   }
 
   async updateTicketStatus(ticketId: number, nuevoEstado: number, idUsuario: number) {
+    console.log(ticketId, nuevoEstado, idUsuario)
     return this.makeRequest(`/ticket/${ticketId}/estado`, {
       method: "PATCH",
       body: JSON.stringify({ nuevoEstado, idUsuario }),
