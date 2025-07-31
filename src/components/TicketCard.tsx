@@ -30,9 +30,10 @@ interface TicketCardProps {
   ticket: Ticket
   statusId?: string
   isDragging?: boolean
+  onTicketClick?: (ticket: Ticket) => void
 }
 
-export function TicketCard({ ticket, statusId, isDragging = false }: TicketCardProps) {
+export function TicketCard({ ticket, statusId, isDragging = false, onTicketClick }: TicketCardProps) {
   const {
     attributes,
     listeners,
@@ -80,6 +81,7 @@ export function TicketCard({ ticket, statusId, isDragging = false }: TicketCardP
     <Card
       ref={setNodeRef}
       style={style}
+      onClick={() => onTicketClick?.(ticket)}
       {...attributes}
       {...listeners}
       className={`cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow mb-2 ${

@@ -86,12 +86,9 @@ class ApiService {
     })
   }
 
-  async addComment(ticketId: number, comentario: string, idAutor: number, token: string) {
+  async addComment(ticketId: number, comentario: string, idAutor: number) {
     return this.makeRequest(`/ticket/${ticketId}/comentario`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify({ comentario, idAutor }),
     })
   }

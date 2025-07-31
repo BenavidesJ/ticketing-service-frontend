@@ -13,11 +13,12 @@ import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Avatar, AvatarFallback } from "./ui/avatar"
-import { LogOut, Plus, RefreshCw } from "lucide-react"
+import { LogOut, Plus } from "lucide-react"
 import { apiService } from "../lib/api-service"
 import { CreateTicketDialog } from "./CreateTicketDialog"
 import { TicketCard } from "./TicketCard"
 import { DroppableColumn } from "./DroppableColumn"
+import { TicketDetailModal } from "./TicketDetailModal"
 
 interface User {
   idUsuario: number
@@ -70,6 +71,7 @@ export function KanbanBoard({ user, onLogout }: Props) {
   const [loading, setLoading] = useState(true)
   const [activeTicket, setActiveTicket] = useState<Ticket | null>(null)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
 
@@ -172,10 +174,6 @@ export function KanbanBoard({ user, onLogout }: Props) {
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-4">
               <h1 className="text-2xl font-bold">Sistema de Tickets</h1>
-              <Button variant="outline" size="sm" onClick={loadData} disabled={loading}>
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Actualizar
-              </Button>
             </div>
             <div className="flex items-center gap-4">
               <Button onClick={() => setShowCreateDialog(true)}>
@@ -220,7 +218,7 @@ export function KanbanBoard({ user, onLogout }: Props) {
                       strategy={verticalListSortingStrategy}
                     >
                       {tickets.length ? (
-                        tickets.map((t) => <TicketCard key={t.idTicket} ticket={t} />)
+                        tickets.map((t) => <TicketCard key={t.idTicket} ticket={t} onTicketClick={setSelectedTicket}/>)
                       ) : (
                         <div className="rounded border border-dashed py-8 text-center text-sm text-gray-400">
                           Arrastra aquí para agregar un ticket
@@ -240,6 +238,13 @@ export function KanbanBoard({ user, onLogout }: Props) {
         onOpenChange={setShowCreateDialog}
         user={user}
         onTicketCreated={loadData}
+      />
+      <TicketDetailModal
+        ticket={selectedTicket}
+        open={!!selectedTicket}
+        onOpenChange={(open) => !open && setSelectedTicket(null)}
+        user={user}
+        onTicketUpdated={loadData}
       />
     </div>
   )
