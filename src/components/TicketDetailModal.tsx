@@ -55,27 +55,27 @@ export function TicketDetailModal({ ticket, open, onOpenChange, user, onTicketUp
   const [comments, setComments] = useState<Comment[]>([])
   const [newComment, setNewComment] = useState("")
   const [loading, setLoading] = useState(false)
-  const [commentsLoading, setCommentsLoading] = useState(false)
   const [error, setError] = useState("")
 
-  // Mock comments for now since the API doesn't have a get comments endpoint
-  useEffect(() => {
-    if (ticket && open) {
-      // In a real app, you'd fetch comments from the API
-      // For now, we'll show mock comments
-      setComments([
-        {
-          idcomentarios: 1,
-          comentario: "Este es un comentario de ejemplo para mostrar la funcionalidad.",
-          idTicket: ticket.idTicket,
-          idAutor: user.idUsuario,
-          fechaCreacion: new Date().toISOString(),
-          activo: true,
-          autorComentario: { nombre: user.Nombre, apellido1: user.Apellido1 },
-        },
-      ])
+useEffect(() => {
+  if (!open || !ticket?.idTicket) return
+
+  let cancelled = false
+  ;(async () => {
+    try {
+      const newComments = await apiService.getComments(ticket.idTicket)
+      if (!cancelled) setComments(newComments.data)
+    } catch (e) {
+      console.error(e)
+      if (!cancelled) setComments([])
     }
-  }, [ticket, open, user])
+  })()
+
+  return () => {
+    cancelled = true
+  }
+}, [open, ticket?.idTicket])
+
 
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault()

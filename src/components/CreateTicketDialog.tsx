@@ -52,7 +52,7 @@ export function CreateTicketDialog({ open, onOpenChange, user, onTicketCreated }
         idSoporte: user.idUsuario, 
       }
 
-      await apiService.createTicket(ticketData, user.Access_token)
+      await apiService.createTicket(ticketData)
 
       // Reset form
       setFormData({
